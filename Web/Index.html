@@ -2,35 +2,62 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Ticks &rarr; DateTime</title>
+    <style>
+        body {
+            font-size: 200%;
+        }
+
+        input {
+            font-size: 100%;
+            padding: 5px 10px;
+        }
+        #congratulations {
+            opacity: 0;
+        }
+        #congratulations.show {
+            opacity: 1;
+            transition: opacity 1s ease-in-out;
+        }
+    </style>
 </head>
 <body>
     <div>
-        <input placeholder="ticks" name="ticks" id="ticks" />
+        <input placeholder="ticks" name="ticks" id="ticks" autofocus="autofocus" />
         &rarr;
         <input placeholder="datetime" name="datetime" id="datetime" />
     </div>
+    <div id="congratulations">Congratulations!</div>
     <script>
         window.onload = function () {
             var ticksInput = document.getElementById("ticks");
             var dateTimeInput = document.getElementById("datetime");
+            var congratulations = document.getElementById("congratulations");
+            var congratulationsTimer;
+            
             var epochTicks = 621355968000000000;
             var ticksPerMillisecond = 10000; // whoa!
-            
+
             ticksInput.onkeyup = function () {
                 var ticks = parseInt(ticksInput.value, 10);
-                
+
                 if (isNaN(ticks)) {
                     return;
                 }
-                
+
                 var ticksSinceEpoch = ticks - epochTicks;
                 var millisecondsSinceEpoch = ticksSinceEpoch / ticksPerMillisecond;
                 var date = new Date(millisecondsSinceEpoch);
 
                 dateTimeInput.value = formatDate(date);
+
+                if (congratulationsTimer) {
+                    clearTimeout(congratulationsTimer);
+                }
+                congratulationsTimer = setTimeout(function() { congratulations.className = "show"; }, 1000);
+
             };
         };
-        
+
         function formatDate(d) {
             return d.toUTCString();
         }
