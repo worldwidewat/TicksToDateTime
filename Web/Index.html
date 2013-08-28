@@ -57,20 +57,14 @@
                 var ticksSinceEpoch = ticks - epochTicks;
                 var millisecondsSinceEpoch = ticksSinceEpoch / ticksPerMillisecond;
                 var date = new Date(millisecondsSinceEpoch);
-
-                dateTimeInput.value = formatDate(date);
+                dateTimeInput.value = date.toISOString();
 
                 if (congratulationsTimer) {
                     clearTimeout(congratulationsTimer);
                 }
                 congratulationsTimer = setTimeout(function () { congratulations.className = "show"; }, 1000);
-
             };
         };
-
-        function formatDate(d) {
-            return d.toISOString();
-        }
         
         (function (i, s, o, g, r, a, m) {
             i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
