@@ -18,6 +18,11 @@
             
             ticksInput.onkeyup = function () {
                 var ticks = parseInt(ticksInput.value, 10);
+                
+                if (isNaN(ticks)) {
+                    return;
+                }
+                
                 var ticksSinceEpoch = ticks - epochTicks;
                 var millisecondsSinceEpoch = ticksSinceEpoch / ticksPerMillisecond;
                 var date = new Date(millisecondsSinceEpoch);
