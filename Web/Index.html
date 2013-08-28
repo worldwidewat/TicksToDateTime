@@ -6,25 +6,36 @@
         body {
             margin: 0;
         }
-        main, header {
-            padding: 10px;            
+
+        section, header {
+            padding: 10px;
         }
-        main {
+
+        section {
             font-size: 200%;
         }
 
-            main, main input {
+            section div:first-child, section input {
                 font-family: Consolas, Courier New, monospace;
             }
 
-                main input {
+                section input {
                     font-size: 100%;
                     padding: 5px 10px;
                 }
 
+        #datetime {
+            white-space: nowrap;
+        }
+
+            #datetime em {
+                color: #999;
+            }
+
         #congratulations {
             opacity: 0;
             font-style: italic;
+            padding: 10px;
         }
 
             #congratulations.show {
@@ -55,21 +66,25 @@
         <a href="http://upboat.me">upboat.me</a> |
         <a href="https://github.com/worldwidewat/TicksToDateTime">source</a>
     </header>
-    <main>
-        <input type="text" placeholder="ticks" name="ticks" id="ticks" size="17" autofocus="autofocus" />
-        &rarr;
-        <input type="text" placeholder="datetime" name="datetime" id="datetime" size="23" readonly="readonly" />
-        <span id="congratulations">Congratulations!</span>
-    </main>
+    <section>
+        <div>
+            <input type="text" placeholder="ticks" id="ticks" size="17" autofocus="autofocus" />
+            &rarr;
+            <span id="datetime"><em>datetime</em></span>
+        </div>
+        <div id="congratulations">
+            Congratulations!
+        </div>
+    </section>
     <script>
+        var epochTicks = 621355968000000000;
+        var ticksPerMillisecond = 10000; // whoa!
+
         window.onload = function () {
             var ticksInput = document.getElementById("ticks");
-            var dateTimeInput = document.getElementById("datetime");
+            var dateTimeOutput = document.getElementById("datetime");
             var congratulations = document.getElementById("congratulations");
             var congratulationsTimer;
-
-            var epochTicks = 621355968000000000;
-            var ticksPerMillisecond = 10000; // whoa!
 
             ticksInput.onkeyup = function () {
                 var ticks = parseInt(ticksInput.value, 10);
@@ -81,7 +96,7 @@
                 var ticksSinceEpoch = ticks - epochTicks;
                 var millisecondsSinceEpoch = ticksSinceEpoch / ticksPerMillisecond;
                 var date = new Date(millisecondsSinceEpoch);
-                dateTimeInput.value = date.toISOString();
+                dateTimeOutput.innerHTML = date.toISOString();
 
                 if (congratulationsTimer) {
                     clearTimeout(congratulationsTimer);
