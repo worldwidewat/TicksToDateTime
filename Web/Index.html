@@ -6,34 +6,39 @@
         body {
             font-size: 200%;
         }
-
+        body,input {
+            /* via stackoverflow's code css */
+            font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;            
+        }
         input {
             font-size: 100%;
             padding: 5px 10px;
         }
+
         #congratulations {
             opacity: 0;
         }
-        #congratulations.show {
-            opacity: 1;
-            transition: opacity 1s ease-in-out;
-        }
+
+            #congratulations.show {
+                opacity: 1;
+                transition: opacity 1s ease-in-out;
+            }
     </style>
 </head>
 <body>
     <div>
-        <input placeholder="ticks" name="ticks" id="ticks" autofocus="autofocus" />
+        <input type="text" placeholder="ticks" name="ticks" id="ticks" size="17" autofocus="autofocus" />
         &rarr;
-        <input placeholder="datetime" name="datetime" id="datetime" />
+        <input type="text" placeholder="datetime" name="datetime" size="23" id="datetime" />
+        <span id="congratulations">Congratulations!</span>
     </div>
-    <div id="congratulations">Congratulations!</div>
     <script>
         window.onload = function () {
             var ticksInput = document.getElementById("ticks");
             var dateTimeInput = document.getElementById("datetime");
             var congratulations = document.getElementById("congratulations");
             var congratulationsTimer;
-            
+
             var epochTicks = 621355968000000000;
             var ticksPerMillisecond = 10000; // whoa!
 
@@ -53,13 +58,13 @@
                 if (congratulationsTimer) {
                     clearTimeout(congratulationsTimer);
                 }
-                congratulationsTimer = setTimeout(function() { congratulations.className = "show"; }, 1000);
+                congratulationsTimer = setTimeout(function () { congratulations.className = "show"; }, 1000);
 
             };
         };
 
         function formatDate(d) {
-            return d.toUTCString();
+            return d.toISOString();
         }
     </script>
 </body>
