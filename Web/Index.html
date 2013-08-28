@@ -4,17 +4,23 @@
     <title>Ticks &rarr; DateTime</title>
     <style>
         body {
+            margin: 0;
+        }
+        main, header {
+            padding: 10px;            
+        }
+        main {
             font-size: 200%;
         }
 
-        body, input {
-            font-family: Consolas, Courier New, monospace;
-        }
+            main, main input {
+                font-family: Consolas, Courier New, monospace;
+            }
 
-        input {
-            font-size: 100%;
-            padding: 5px 10px;
-        }
+                main input {
+                    font-size: 100%;
+                    padding: 5px 10px;
+                }
 
         #congratulations {
             opacity: 0;
@@ -29,15 +35,32 @@
         #datetime {
             border: none;
         }
+
+        a:link, a:visited, a:active {
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        header {
+            background-color: #eee;
+        }
     </style>
 </head>
 <body>
-    <div>
+    <header>
+        <a href="http://twitter.com/mharen">@mharen</a> | 
+        <a href="http://upboat.me">upboat.me</a> |
+        <a href="https://github.com/worldwidewat/TicksToDateTime">source</a>
+    </header>
+    <main>
         <input type="text" placeholder="ticks" name="ticks" id="ticks" size="17" autofocus="autofocus" />
         &rarr;
         <input type="text" placeholder="datetime" name="datetime" id="datetime" size="23" readonly="readonly" />
         <span id="congratulations">Congratulations!</span>
-    </div>
+    </main>
     <script>
         window.onload = function () {
             var ticksInput = document.getElementById("ticks");
