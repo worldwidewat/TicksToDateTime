@@ -6,10 +6,11 @@
         body {
             font-size: 200%;
         }
-        body,input {
-            /* via stackoverflow's code css */
-            font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;            
+
+        body, input {
+            font-family: Consolas, Courier New, monospace;
         }
+
         input {
             font-size: 100%;
             padding: 5px 10px;
@@ -23,13 +24,17 @@
                 opacity: 1;
                 transition: opacity 1s ease-in-out;
             }
+
+        #datetime {
+            border: none;
+        }
     </style>
 </head>
 <body>
     <div>
         <input type="text" placeholder="ticks" name="ticks" id="ticks" size="17" autofocus="autofocus" />
         &rarr;
-        <input type="text" placeholder="datetime" name="datetime" size="23" id="datetime" />
+        <input type="text" placeholder="datetime" name="datetime" id="datetime" size="23" readonly="readonly" />
         <span id="congratulations">Congratulations!</span>
     </div>
     <script>
