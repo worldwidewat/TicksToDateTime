@@ -91,7 +91,6 @@
             var ticksSinceEpoch = ticks - epochTicks;
             var millisecondsSinceEpoch = ticksSinceEpoch / ticksPerMillisecond;
 
-
             if (millisecondsSinceEpoch > maxDateMilliseconds) {
                 //      +035210-09-17T07:18:31.111Z
                 return "+WHOATH-AT-ISTOO:FA:RA.WAYZ";
@@ -101,7 +100,7 @@
             var date = new Date(millisecondsSinceEpoch);
             return date.toISOString();
         };
-        
+
         var doWork = function () {
             var dateTimeOutput = document.getElementById("datetime");
             var congratulations = document.getElementById("congratulations");
@@ -115,10 +114,10 @@
             }
             congratulationsTimer = setTimeout(function () { congratulations.className = "show"; }, 1000);
         };
-        
+
         // bind to the first supported event (listed in order of preference)
         var possibleEvents = ["oninput", "onpropertychange", "onkeyup", "onchange"];
-        
+
         window.onload = function () {
             var ticksInput = document.getElementById("ticks");
 
@@ -129,6 +128,15 @@
                     ticksInput[eventName] = doWork;
                     break;
                 }
+            }
+
+            // hack for IE, which doesn't fire the preferred events on backspace/delete
+            if (navigator.appName == 'Microsoft Internet Explorer') {
+                ticksInput.onkeyup = function (e) {
+                    if (e.keyCode == 8 || e.keyCode == 46) {
+                        doWork.call(this);
+                    }
+                };
             }
         };
 
