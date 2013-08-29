@@ -27,6 +27,7 @@
 
         #datetime {
             white-space: nowrap;
+            border: none;
         }
 
             #datetime em {
@@ -43,10 +44,6 @@
                 opacity: 1;
                 transition: opacity .5s ease;
             }
-
-        #datetime {
-            border: none;
-        }
 
         a:link, a:visited, a:active {
             text-decoration: none;
@@ -81,30 +78,58 @@
     <script>
         var epochTicks = 621355968000000000;
         var ticksPerMillisecond = 10000; // whoa!
+        var maxDateMilliseconds = 8640000000000000; // via http://ecma-international.org/ecma-262/5.1/#sec-15.9.1.1
+        var congratulationsTimer;
 
-        window.onload = function () {
-            var ticksInput = document.getElementById("ticks");
+        var ticksToDateString = function (ticks) {
+            if (isNaN(ticks)) {
+                //      0001-01-01T00:00:00.000Z
+                return "NANA-NA-NATNA:NA:BA.TMAN";
+            }
+
+            // convert the ticks into something javascript understands
+            var ticksSinceEpoch = ticks - epochTicks;
+            var millisecondsSinceEpoch = ticksSinceEpoch / ticksPerMillisecond;
+
+
+            if (millisecondsSinceEpoch > maxDateMilliseconds) {
+                //      +035210-09-17T07:18:31.111Z
+                return "+WHOATH-AT-ISTOO:FA:RA.WAYZ";
+            }
+
+            // output the result in something the human understands
+            var date = new Date(millisecondsSinceEpoch);
+            return date.toISOString();
+        };
+        
+        var doWork = function () {
             var dateTimeOutput = document.getElementById("datetime");
             var congratulations = document.getElementById("congratulations");
-            var congratulationsTimer;
+            var ticks = parseInt(this.value, 10);
 
-            ticksInput.onkeyup = function () {
-                var ticks = parseInt(ticksInput.value, 10);
+            dateTimeOutput.innerHTML = ticksToDateString(ticks);
 
-                if (isNaN(ticks)) {
-                    return;
+            // hat tip: newguid.com
+            if (congratulationsTimer) {
+                clearTimeout(congratulationsTimer);
+            }
+            congratulationsTimer = setTimeout(function () { congratulations.className = "show"; }, 1000);
+        };
+        
+        // bind to the first supported event (listed in order of preference)
+        var possibleEvents = ["oninput", "onpropertychange", "onkeyup", "onchange"];
+        
+        window.onload = function () {
+            var ticksInput = document.getElementById("ticks");
+
+            // for/each is deprecated, but alternatives like array.foreach isn't _widely_ supported yet :/
+            for (var i = 0; i < possibleEvents.length; ++i) {
+                var eventName = possibleEvents[i];
+                if (eventName in ticksInput) {
+                    ticksInput[eventName] = doWork;
+                    break;
                 }
-
-                var ticksSinceEpoch = ticks - epochTicks;
-                var millisecondsSinceEpoch = ticksSinceEpoch / ticksPerMillisecond;
-                var date = new Date(millisecondsSinceEpoch);
-                dateTimeOutput.innerHTML = date.toISOString();
-
-                if (congratulationsTimer) {
-                    clearTimeout(congratulationsTimer);
-                }
-                congratulationsTimer = setTimeout(function () { congratulations.className = "show"; }, 1000);
-            };
+            }
         };
 
         (function (i, s, o, g, r, a, m) {
