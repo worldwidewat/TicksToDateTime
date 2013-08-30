@@ -178,6 +178,11 @@
 
             dateTimeOutput.innerHTML = output;
 
+            var ticksLength = this.value.length;
+            if (ticksLength != this.size) {
+                this.size = Math.max(17, Math.min(ticksLength, 30));
+            }
+            
             // hat tip: newguid.com
             if (congratulationsTimer) {
                 clearTimeout(congratulationsTimer);
