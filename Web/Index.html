@@ -7,7 +7,12 @@
         body {
             margin: 0;
             background-color: #BFD841;
-            color: #0C304A;
+        }
+
+
+        header {
+            margin-bottom: 20px;
+            text-align: right;
         }
 
         section, header {
@@ -45,6 +50,16 @@
                     color: #F3F4F1;
                 }
 
+
+        #datetime {
+            color: #85a71e;
+        }
+
+            #datetime b {
+                font-weight: normal;
+                color: #0c304a;
+            }
+
         #congratulations {
             opacity: 0;
             font-style: italic;
@@ -64,11 +79,6 @@
 
         a:hover {
             color: #2B79A1;
-        }
-
-        header {
-            margin-bottom: 20px;
-            text-align: right;
         }
 
         @media screen and (max-width: 640px) {
@@ -92,12 +102,6 @@
                     text-align: center;
                 }
         }
-
-        @media screen and (max-width: 320px) {
-            section {
-                font-size: 100%;
-            }
-        }
     </style>
 </head>
 <body>
@@ -112,7 +116,7 @@
                 <input type="text" placeholder="ticks" id="ticks" size="17" autofocus="autofocus" />
             </div>
             <div id="arrow">&darr;</div>
-            <div id="datetime">0001-01-01T00:00:00.000Z</div>
+            <div id="datetime"></div>
         </div>
         <div id="congratulations">
             Congratulations!
@@ -147,11 +151,22 @@
         var doWork = function () {
             var dateTimeOutput = document.getElementById("datetime");
             var congratulations = document.getElementById("congratulations");
-            var ticks = parseInt(this.value, 10);
+            var ticks = parseInt(this.value || 0, 10);
 
             var dateString = ticksToDateString(ticks);
-            var parts = dateString.split("T");
-            dateTimeOutput.innerHTML = parts[0] + "<span>T</span>" + parts[1];
+            var firstTIndex = dateString.indexOf("T");
+            var datePart = dateString.slice(0, firstTIndex);
+            var timePart = dateString.slice(firstTIndex + 1);
+
+            var goodParts = /([A-Z0-9]+)/g;
+            var wrapParts = "<b>$1</b>";
+
+            // wrap everything but the separators in <b> tags
+            var output = datePart.replace(goodParts, wrapParts)
+                + " T " // padd the "T" separator with spaces"
+                + timePart.replace(goodParts, wrapParts);
+
+            dateTimeOutput.innerHTML = output;
 
             // hat tip: newguid.com
             if (congratulationsTimer) {
@@ -164,7 +179,9 @@
         var possibleEvents = ["oninput", "onpropertychange", "onkeyup", "onchange"];
 
         window.onload = function () {
+
             var ticksInput = document.getElementById("ticks");
+            doWork.call(ticksInput);
 
             // for/each is deprecated, but alternatives like array.foreach isn't _widely_ supported yet :/
             for (var i = 0; i < possibleEvents.length; ++i) {
