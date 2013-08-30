@@ -9,7 +9,6 @@
             background-color: #BFD841;
         }
 
-
         header {
             margin-bottom: 20px;
             text-align: right;
@@ -24,7 +23,7 @@
             font-size: 200%;
         }
 
-            section div:first-child, section input {
+            section input, #datetime {
                 font-family: Consolas, Courier New, monospace;
             }
 
@@ -51,13 +50,22 @@
                 }
 
 
-        #datetime {
+        #arrow {
+            padding: 15px 0;
+        }
+
+        #datetime, #arrow {
             color: #85a71e;
         }
 
             #datetime b {
                 font-weight: normal;
                 color: #0c304a;
+            }
+
+            #datetime .pad {
+                padding-left: 10px;
+                padding-right: 10px;
             }
 
         #congratulations {
@@ -112,15 +120,11 @@
     </header>
     <section>
         <div>
-            <div id="ticks-input">
-                <input type="text" placeholder="ticks" id="ticks" size="17" autofocus="autofocus" />
-            </div>
-            <div id="arrow">&darr;</div>
-            <div id="datetime"></div>
+            <input type="text" placeholder="ticks" id="ticks" size="17" autofocus="autofocus" />
         </div>
-        <div id="congratulations">
-            Congratulations!
-        </div>
+        <div id="arrow">&darr;</div>
+        <div id="datetime"></div>
+        <div id="congratulations">Congratulations!</div>
     </section>
     <script>
         var epochTicks = 621355968000000000;
@@ -148,12 +152,16 @@
             return date.toISOString();
         };
 
+        // the event handler that runs on page load and when the input changes
         var doWork = function () {
             var dateTimeOutput = document.getElementById("datetime");
             var congratulations = document.getElementById("congratulations");
-            var ticks = parseInt(this.value || 0, 10);
 
+            var ticks = parseInt(this.value || 0, 10);
             var dateString = ticksToDateString(ticks);
+
+            // split the output at the "T" so we can treat that
+            // character specially
             var firstTIndex = dateString.indexOf("T");
             var datePart = dateString.slice(0, firstTIndex);
             var timePart = dateString.slice(firstTIndex + 1);
@@ -161,9 +169,10 @@
             var goodParts = /([A-Z0-9]+)/g;
             var wrapParts = "<b>$1</b>";
 
-            // wrap everything but the separators in <b> tags
+            // wrap everything but the separators in <b> tags and pad the "T" separator with spaces 
+            // and prepend it with a zero-width space so the line will break there on small screens
             var output = datePart.replace(goodParts, wrapParts)
-                + " T " // padd the "T" separator with spaces"
+                + "<span class='pad'>&#8203;T</span>"
                 + timePart.replace(goodParts, wrapParts);
 
             dateTimeOutput.innerHTML = output;
@@ -179,7 +188,6 @@
         var possibleEvents = ["oninput", "onpropertychange", "onkeyup", "onchange"];
 
         window.onload = function () {
-
             var ticksInput = document.getElementById("ticks");
             doWork.call(ticksInput);
 
