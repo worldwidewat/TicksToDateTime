@@ -181,7 +181,9 @@
             if (congratulationsTimer) {
                 clearTimeout(congratulationsTimer);
             }
-            congratulationsTimer = setTimeout(function () { congratulations.className = "show"; }, 1000);
+            if (ticks != 0) {
+                congratulationsTimer = setTimeout(function() { congratulations.className = "show"; }, 1000);
+            }
         };
 
         // bind to the first supported event (listed in order of preference)
