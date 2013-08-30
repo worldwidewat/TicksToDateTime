@@ -4,21 +4,25 @@
     <title>Ticks &rarr; DateTime</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <style>
-        body {
+        body, section {
             margin: 0;
             background-color: #BFD841;
         }
 
-        header {
-            margin-bottom: 20px;
-            text-align: right;
+        footer {
+            margin-top: 20px;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            z-index: -1;
         }
 
-        section, header {
+        section, footer {
             padding: 10px;
         }
 
         section {
+            margin-top: 10px;
             text-align: center;
             font-size: 200%;
         }
@@ -35,7 +39,7 @@
                 border-radius: 10px;
                 color: #F3F4F1;
                 outline: none;
-                box-shadow:0 15px 20px -15px #85A71E;
+                box-shadow: 0 15px 20px -15px #85A71E;
                 box-sizing: border-box;
             }
 
@@ -92,12 +96,13 @@
         }
 
         @media screen and (max-width: 640px) {
-            section, header {
+            section, footer {
                 padding: 10px 0;
             }
 
-            header {
+            footer {
                 text-align: center;
+                position: relative;
             }
 
             section {
@@ -115,11 +120,6 @@
     </style>
 </head>
 <body>
-    <header>
-        <a href="http://twitter.com/mharen">@mharen</a> |
-        <a href="http://upboat.me">upboat.me</a> |
-        <a href="https://github.com/worldwidewat/TicksToDateTime">source</a>
-    </header>
     <section>
         <div>
             <input type="text" placeholder="ticks" id="ticks" size="17" autofocus="autofocus" />
@@ -128,6 +128,11 @@
         <div id="datetime"></div>
         <div id="congratulations">Congratulations!</div>
     </section>
+    <footer>
+        <a href="http://twitter.com/mharen">@mharen</a> |
+        <a href="http://upboat.me">upboat.me</a> |
+        <a href="https://github.com/worldwidewat/TicksToDateTime">source</a>
+    </footer>
     <script>
         var epochTicks = 621355968000000000;
         var ticksPerMillisecond = 10000; // whoa!
@@ -183,13 +188,13 @@
             if (ticksLength != this.size) {
                 this.size = Math.max(17, Math.min(ticksLength, 30));
             }
-            
+
             // hat tip: newguid.com
             if (congratulationsTimer) {
                 clearTimeout(congratulationsTimer);
             }
             if (ticks != 0) {
-                congratulationsTimer = setTimeout(function() { congratulations.className = "show"; }, 1000);
+                congratulationsTimer = setTimeout(function () { congratulations.className = "show"; }, 1000);
             }
         };
 
