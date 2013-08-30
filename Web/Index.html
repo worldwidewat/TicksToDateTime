@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Ticks &rarr; DateTime</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <style>
         body {
             margin: 0;
@@ -44,15 +45,11 @@
                     color: #F3F4F1;
                 }
 
-        #datetime {
-            white-space: nowrap;
-            border: none;
-        }
-
         #congratulations {
             opacity: 0;
             font-style: italic;
-            padding: 10px;
+            padding-top: 25px;
+            font-size: 75%;
         }
 
             #congratulations.show {
@@ -73,19 +70,49 @@
             margin-bottom: 20px;
             text-align: right;
         }
+
+        @media screen and (max-width: 640px) {
+            section, header {
+                padding: 10px 0;
+            }
+
+            header {
+                text-align: center;
+            }
+
+            section {
+                font-size: 125%;
+            }
+
+                section input {
+                    width: 100%;
+                    border-radius: 0;
+                    padding: 20px 10px;
+                    font-size: 150%;
+                    text-align: center;
+                }
+        }
+
+        @media screen and (max-width: 320px) {
+            section {
+                font-size: 100%;
+            }
+        }
     </style>
 </head>
 <body>
     <header>
-        <a href="http://twitter.com/mharen">@mharen</a> | 
+        <a href="http://twitter.com/mharen">@mharen</a> |
         <a href="http://upboat.me">upboat.me</a> |
         <a href="https://github.com/worldwidewat/TicksToDateTime">source</a>
     </header>
     <section>
         <div>
-            <input type="text" placeholder="ticks" id="ticks" size="17" autofocus="autofocus" />
-            &rarr;
-            <span id="datetime">0001-01-01T00:00:00.000Z</span>
+            <div id="ticks-input">
+                <input type="text" placeholder="ticks" id="ticks" size="17" autofocus="autofocus" />
+            </div>
+            <div id="arrow">&darr;</div>
+            <div id="datetime">0001-01-01T00:00:00.000Z</div>
         </div>
         <div id="congratulations">
             Congratulations!
@@ -109,7 +136,7 @@
 
             if (millisecondsSinceEpoch > maxDateMilliseconds) {
                 //      +035210-09-17T07:18:31.111Z
-                return "+WHOATH-AT-ISTOO:FA:RA.WAYZ";
+                return "+WHOAWH-OA-ISTOO:FA:RA.WAYZ";
             }
 
             // output the result in something the human understands
@@ -122,7 +149,9 @@
             var congratulations = document.getElementById("congratulations");
             var ticks = parseInt(this.value, 10);
 
-            dateTimeOutput.innerText = ticksToDateString(ticks);
+            var dateString = ticksToDateString(ticks);
+            var parts = dateString.split("T");
+            dateTimeOutput.innerHTML = parts[0] + "<span>T</span>" + parts[1];
 
             // hat tip: newguid.com
             if (congratulationsTimer) {
