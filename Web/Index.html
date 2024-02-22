@@ -145,16 +145,21 @@
         <a href="https://github.com/worldwidewat/TicksToDateTime">source</a>
     </footer>
     <script>
-        var epochTicks = 621355968000000000;
-        var ticksPerMillisecond = 10000; // whoa!
-        var maxDateMilliseconds = 8640000000000000; // via http://ecma-international.org/ecma-262/5.1/#sec-15.9.1.1
+        var epochTicks = 621355968000000000n;
+        var ticksPerMillisecond = 10000n; // whoa!
+        var maxDateMilliseconds = 8640000000000000n; // via http://ecma-international.org/ecma-262/5.1/#sec-15.9.1.1
         var congratulationsTimer;
 
-        var ticksToDateString = function (ticks) {
-            if (isNaN(ticks)) {
+        var ticksToDateString = function (input) {
+            var ticks;
+            try {
+                ticks = BigInt(input);
+            } catch (error) {
                 //      0001-01-01T00:00:00.000Z
                 return "NANA-NA-NATNA:NA:BA.TMAN";
             }
+            if (ticks < 0)
+                return "NANA-NA-NATNA:NA:BA.TMAN";
 
             // convert the ticks into something javascript understands
             var ticksSinceEpoch = ticks - epochTicks;
@@ -166,7 +171,7 @@
             }
 
             // output the result in something the human understands
-            var date = new Date(millisecondsSinceEpoch);
+            var date = new Date(Number(millisecondsSinceEpoch));
             return date.toISOString();
         };
 
@@ -175,8 +180,7 @@
             var dateTimeOutput = document.getElementById("datetime");
             var congratulations = document.getElementById("congratulations");
 
-            var ticks = parseInt(this.value || 0, 10);
-            var dateString = ticksToDateString(ticks);
+            var dateString = ticksToDateString(this.value || "0");
 
             // split the output at the "T" so we can treat that
             // character specially
@@ -204,7 +208,7 @@
             if (congratulationsTimer) {
                 clearTimeout(congratulationsTimer);
             }
-            if (ticks != 0) {
+            if (this.value.length > 0) {
                 congratulationsTimer = setTimeout(function () { congratulations.className = "show"; }, 1000);
             }
         };
@@ -232,6 +236,24 @@
                         doWork.call(this);
                     }
                 };
+            }
+        };
+
+        // run doTests() in the browser console to verify
+        window.doTests = function() {
+            // https://replit.com/@mharen/RecentFocusedPolygons#main.cs
+            for(var testCase of [
+                {input: '', expected: '0001-01-01T00:00:00.000Z'},
+                {input: '1', expected: '0001-01-01T00:00:00.001Z'},
+                {input: '99999999999999999999', expected: '+WHOAWH-OA-ISTOO:FA:RA.WAYZ'},
+                {input: '638338147199990000', expected: '2023-10-25T07:11:59.999Z'},
+                {input: '638338147200000000', expected: '2023-10-25T07:12:00.000Z'},
+                {input: '638315425210000000', expected: '2023-09-29T00:02:01.000Z'},
+                {input: '638315425210010000', expected: '2023-09-29T00:02:01.001Z'},
+            ]){
+                testCase.actual = ticksToDateString(testCase.input);
+                testCase.status = testCase.expected === testCase.actual ? "✅" : "❌";
+                console.log(testCase);
             }
         };
 
